@@ -10,7 +10,7 @@ type Key struct {
 
 // Configure globale keys
 var globalKeys []Key = []Key{
-	Key{"", gocui.KeyCtrlC, quitAction},
+	Key{"", gocui.KeyCtrlC, actionGlobalQuit},
 }
 
 // Define UI key bindings

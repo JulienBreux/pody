@@ -6,7 +6,6 @@ import (
 	"github.com/jroimartin/gocui"
 )
 
-// App
 func main() {
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
@@ -29,10 +28,9 @@ func main() {
 }
 
 func uiLayout(g *gocui.Gui) error {
-	return nil
-}
+	maxX, maxY := g.Size()
 
-// Global action: Quit
-func quitAction(g *gocui.Gui, v *gocui.View) error {
-	return gocui.ErrQuit
+	viewTitle(g, maxX, maxY)
+
+	return nil
 }
