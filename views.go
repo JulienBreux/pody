@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/jroimartin/gocui"
+	"github.com/willf/pad"
 )
 
 // View: Overlay
@@ -56,23 +58,39 @@ func viewDebug(g *gocui.Gui, lMaxX int, lMaxY int) error {
 
 // View: Pods
 func viewPods(g *gocui.Gui, lMaxX int, lMaxY int) error {
-	if v, err := g.SetView("pods", 0, 1, lMaxX-1, lMaxY-1); err != nil {
+	if v, err := g.SetView("pods", -1, 1, lMaxX, lMaxY-1); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
 
 		// Settings
-		v.Title = " Pods "
-		v.Highlight = true
+		v.Frame = false
 		v.SelBgColor = gocui.ColorGreen
 		v.SelFgColor = gocui.ColorBlack
+		v.SetCursor(0, 2)
 
 		// Set as current view
 		g.SetCurrentView(v.Name())
 
 		// Content
-		fmt.Fprintln(v, "Hello")
+		// Add column
+		viewPodsAddLine(v, lMaxX, "NAME", "READY", "STATUS", "RESTARTS", "AGE")
+		fmt.Fprintln(v, strings.Repeat("─", lMaxX))
 	}
 
 	return nil
+}
+
+// Add line to view pods
+func viewPodsAddLine(v *gocui.View, maxX int, name, ready, status, restarts, age string) {
+	wN := maxX - 40 - 2
+	if wN < 45 {
+		wN = 45
+	}
+	line := pad.Right(name, wN, " ") +
+		pad.Right(ready, 12, " ") +
+		pad.Right(status, 12, " ") +
+		pad.Right(restarts, 12, " ") +
+		pad.Right(age, 4, " ")
+	fmt.Fprintln(v, line)
 }
