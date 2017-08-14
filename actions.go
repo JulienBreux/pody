@@ -20,7 +20,7 @@ func actionGlobalToggleDebug(g *gocui.Gui, v *gocui.View) error {
 	} else {
 		debug(g, "Action: Toggle debug display (hide)")
 		g.SetViewOnBottom(vn)
-		// TODO g.SetCurrentView("pods")
+		g.SetCurrentView("pods")
 	}
 
 	DEBUG_DISPLAYED = !DEBUG_DISPLAYED

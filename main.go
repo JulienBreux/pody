@@ -35,6 +35,7 @@ func uiLayout(g *gocui.Gui) error {
 	viewDebug(g, maxX, maxY)
 	viewOverlay(g, maxX, maxY)
 	viewTitle(g, maxX, maxY)
+	viewPods(g, maxX, maxY)
 
 	return nil
 }

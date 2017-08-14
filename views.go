@@ -53,3 +53,26 @@ func viewDebug(g *gocui.Gui, lMaxX int, lMaxY int) error {
 
 	return nil
 }
+
+// View: Pods
+func viewPods(g *gocui.Gui, lMaxX int, lMaxY int) error {
+	if v, err := g.SetView("pods", 0, 1, lMaxX-1, lMaxY-1); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+
+		// Settings
+		v.Title = " Pods "
+		v.Highlight = true
+		v.SelBgColor = gocui.ColorGreen
+		v.SelFgColor = gocui.ColorBlack
+
+		// Set as current view
+		g.SetCurrentView(v.Name())
+
+		// Content
+		fmt.Fprintln(v, "Hello")
+	}
+
+	return nil
+}
