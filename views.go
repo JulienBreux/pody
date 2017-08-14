@@ -41,21 +41,14 @@ func viewTitle(g *gocui.Gui, lMaxX int, lMaxY int) error {
 
 // View: Debug
 func viewDebug(g *gocui.Gui, lMaxX int, lMaxY int) error {
-	// Main view
-	minX := 2
-	maxX := lMaxX - 4
-	minY := 2
-	maxY := lMaxY - 2
-	if v, err := g.SetView("debug", minX, minY, maxX, maxY); err != nil {
+	if v, err := g.SetView("debug", 2, 2, lMaxX-4, lMaxY-2); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
 
-		// Configure view
+		// Settings
 		v.Title = " Debug "
 		v.Autoscroll = true
-		g.SetViewOnTop(v.Name())
-		g.SetCurrentView(v.Name())
 	}
 
 	return nil

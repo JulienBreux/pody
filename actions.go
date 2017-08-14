@@ -11,12 +11,15 @@ func actionGlobalQuit(g *gocui.Gui, v *gocui.View) error {
 
 // Global action: Toggle debug
 func actionGlobalToggleDebug(g *gocui.Gui, v *gocui.View) error {
+	vn := "debug"
+
 	if !DEBUG_DISPLAYED {
 		debug(g, "Action: Toggle debug display (show)")
-		g.SetViewOnTop("debug")
+		g.SetViewOnTop(vn)
+		g.SetCurrentView(vn)
 	} else {
 		debug(g, "Action: Toggle debug display (hide)")
-		g.SetViewOnBottom("debug")
+		g.SetViewOnBottom(vn)
 		// TODO g.SetCurrentView("pods")
 	}
 
