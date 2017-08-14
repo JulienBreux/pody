@@ -8,6 +8,8 @@ import (
 	"github.com/jroimartin/gocui"
 )
 
+var NAMESPACE string = "default"
+
 func main() {
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {

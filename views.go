@@ -72,25 +72,51 @@ func viewPods(g *gocui.Gui, lMaxX int, lMaxY int) error {
 		// Set as current view
 		g.SetCurrentView(v.Name())
 
-		// Content
-		// Add column
+		// Content: Add column
+		//viewPodsAddLine(v, lMaxX, "NAME", "CPU", "MEMORY", "READY", "STATUS", "RESTARTS", "AGE") // TODO CPU + Memory
 		viewPodsAddLine(v, lMaxX, "NAME", "READY", "STATUS", "RESTARTS", "AGE")
 		fmt.Fprintln(v, strings.Repeat("─", lMaxX))
+
+		// Content: Add lines
+		// TODO Use goroutine
+		pods, err := getPods()
+		if err != nil {
+			panic(err.Error())
+		}
+		if len(pods.Items) > 0 {
+			debug(g, fmt.Sprintf("There are %d pods in the cluster", len(pods.Items)))
+			for _, pod := range pods.Items {
+				n := pod.GetName()
+				//c := "?" // TODO CPU + Memory
+				//m := "?" // TODO CPU + Memory
+				s := columnHelperStatus(pod.Status)
+				r := columnHelperRestarts(pod.Status.ContainerStatuses)
+				a := columnHelperAge(pod.CreationTimestamp)
+				cr := columnHelperReady(pod.Status.ContainerStatuses)
+				viewPodsAddLine(v, lMaxX, n, cr, s, r, a)
+				//viewPodsAddLine(v, lMaxX, n, c, m, cr, s, r, a) // TODO CPU + Memory
+			}
+		} else {
+			debug(g, "Pods not found.")
+		}
 	}
 
 	return nil
 }
 
 // Add line to view pods
+//func viewPodsAddLine(v *gocui.View, maxX int, name, cpu, memory, ready, status, restarts, age string) { // TODO CPU + Memory
 func viewPodsAddLine(v *gocui.View, maxX int, name, ready, status, restarts, age string) {
-	wN := maxX - 40 - 2
+	wN := maxX - 34 // 54 // TODO CPU + Memory
 	if wN < 45 {
 		wN = 45
 	}
 	line := pad.Right(name, wN, " ") +
-		pad.Right(ready, 12, " ") +
-		pad.Right(status, 12, " ") +
-		pad.Right(restarts, 12, " ") +
+		//pad.Right(cpu, 10, " ") + // TODO CPU + Memory
+		//pad.Right(memory, 10, " ") + // TODO CPU + Memory
+		pad.Right(ready, 10, " ") +
+		pad.Right(status, 10, " ") +
+		pad.Right(restarts, 10, " ") +
 		pad.Right(age, 4, " ")
 	fmt.Fprintln(v, line)
 }
