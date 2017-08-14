@@ -11,6 +11,7 @@ type Key struct {
 // Configure globale keys
 var globalKeys []Key = []Key{
 	Key{"", gocui.KeyCtrlC, actionGlobalQuit},
+	Key{"", gocui.KeyCtrlD, actionGlobalToggleDebug},
 }
 
 // Define UI key bindings
