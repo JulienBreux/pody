@@ -1,8 +1,8 @@
 package main
 
-import "github.com/jroimartin/gocui"
-
-var DEBUG_DISPLAYED bool = false
+import (
+	"github.com/jroimartin/gocui"
+)
 
 // Global action: Quit
 func actionGlobalQuit(g *gocui.Gui, v *gocui.View) error {
@@ -30,15 +30,18 @@ func actionGlobalToggleDebug(g *gocui.Gui, v *gocui.View) error {
 
 // View pods: Up
 func actionViewPodsUp(g *gocui.Gui, v *gocui.View) error {
-	return nil
+	moveViewCursorUp(g, v, 2)
+	line, err := getViewLine(g, v)
+	POD = getPodNameFromLine(line)
+	debug(g, " - Select up in pods view: "+POD)
+	return err
 }
 
 // View pods: Down
 func actionViewPodsDown(g *gocui.Gui, v *gocui.View) error {
-	return nil
-}
-
-// View pods: Select
-func actionViewPodsSelect(g *gocui.Gui, v *gocui.View) error {
-	return nil
+	moveViewCursorDown(g, v, false)
+	line, err := getViewLine(g, v)
+	POD = getPodNameFromLine(line)
+	debug(g, " - Select down in pods view: "+POD)
+	return err
 }

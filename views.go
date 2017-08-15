@@ -129,7 +129,13 @@ func viewPodsActualize(g *gocui.Gui, lMaxX int) {
 				viewPodsAddLine(v, lMaxX, n, cr, s, r, a)
 				//viewPodsAddLine(v, lMaxX, n, c, m, cr, s, r, a) // TODO CPU + Memory #20
 			}
+
+			// Reset cursor when empty line
+			if l, err := getViewLine(g, v); err != nil || l == "" {
+				v.SetCursor(0, 2)
+			}
 		} else {
+			v.SetCursor(0, 2)
 			debug(g, "View pods: Pods not found")
 		}
 
