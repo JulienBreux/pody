@@ -39,6 +39,13 @@ func getPods() (*v1.PodList, error) {
 	return cs.CoreV1().Pods(NAMESPACE).List(metav1.ListOptions{})
 }
 
+// Delete pod
+func deletePod(p string) error {
+	cs := getClientSet()
+
+	return cs.CoreV1().Pods(NAMESPACE).Delete(p, &metav1.DeleteOptions{})
+}
+
 // Column helper: Restarts
 func columnHelperRestarts(cs []v1.ContainerStatus) string {
 	r := 0

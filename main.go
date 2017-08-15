@@ -10,7 +10,7 @@ import (
 )
 
 var DEBUG_DISPLAYED bool = false
-var NAMESPACE string = ""
+var NAMESPACE string = "default"
 var POD string = ""
 
 // Configure globale keys
@@ -19,6 +19,7 @@ var keys []Key = []Key{
 	Key{"", gocui.KeyCtrlD, actionGlobalToggleDebug},
 	Key{"pods", gocui.KeyArrowUp, actionViewPodsUp},
 	Key{"pods", gocui.KeyArrowDown, actionViewPodsDown},
+	Key{"pods", 'd', actionViewPodsDelete},
 }
 
 // Main or not main, that's the question^^

@@ -75,29 +75,30 @@ func viewPods(g *gocui.Gui, lMaxX int, lMaxY int) error {
 		g.SetCurrentView(v.Name())
 
 		// Content
-		go viewPodsActualize(g, lMaxX)
-		go viewPodsAutoRefresh(g, lMaxX)
+		go viewPodsShowWithAutoRefresh(g)
 	}
 
 	return nil
 }
 
 // Auto refresh view pods
-func viewPodsAutoRefresh(g *gocui.Gui, lMaxX int) {
+func viewPodsShowWithAutoRefresh(g *gocui.Gui) {
 	c := getConfig()
 	t := time.NewTicker(time.Duration(c.frequency) * time.Second)
+	go viewPodsRefreshList(g)
 	for {
 		select {
 		case <-t.C:
 			debug(g, fmt.Sprintf("View pods: Refreshing (%ds)", c.frequency))
-			go viewPodsActualize(g, lMaxX)
+			go viewPodsRefreshList(g)
 		}
 	}
 }
 
-// Actualize pods view
-func viewPodsActualize(g *gocui.Gui, lMaxX int) {
+// Actualize list in pods view
+func viewPodsRefreshList(g *gocui.Gui) {
 	g.Execute(func(g *gocui.Gui) error {
+		lMaxX, _ := g.Size()
 		debug(g, "View pods: Actualize")
 		v, err := g.View("pods")
 		if err != nil {

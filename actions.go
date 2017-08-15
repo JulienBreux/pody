@@ -45,3 +45,13 @@ func actionViewPodsDown(g *gocui.Gui, v *gocui.View) error {
 	debug(g, " - Select down in pods view: "+POD)
 	return err
 }
+
+// View pods: Delete
+func actionViewPodsDelete(g *gocui.Gui, v *gocui.View) error {
+	debug(g, "Delete pod: "+POD)
+	err := deletePod(POD)
+
+	go viewPodsRefreshList(g)
+
+	return err
+}
