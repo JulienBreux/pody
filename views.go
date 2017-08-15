@@ -59,6 +59,7 @@ func viewDebug(g *gocui.Gui, lMaxX int, lMaxY int) error {
 
 // View: Logs
 func viewLogs(g *gocui.Gui, lMaxX int, lMaxY int) error {
+	// Logs view
 	if v, err := g.SetView("logs", 2, 2, lMaxX-4, lMaxY-2); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
@@ -67,6 +68,17 @@ func viewLogs(g *gocui.Gui, lMaxX int, lMaxY int) error {
 		// Settings
 		v.Title = " Logs "
 		v.Autoscroll = true
+	}
+
+	// Containers view
+	if v, err := g.SetView("logs-containers", 2, 2, lMaxX-4, lMaxY-2); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+
+		// Settings
+		v.Frame = false
+		v.BgColor = gocui.ColorRed
 	}
 
 	return nil

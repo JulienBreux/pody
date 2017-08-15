@@ -62,6 +62,7 @@ func showViewLogs(g *gocui.Gui, v *gocui.View) error {
 
 	debug(g, "Action: Show view logs")
 	g.SetViewOnTop(vn)
+	g.SetViewOnTop(vn + "-containers")
 	g.SetCurrentView(vn)
 
 	// TODO Enable logs
@@ -88,6 +89,7 @@ func actionViewPodsLogs(g *gocui.Gui, v *gocui.View) error {
 // View logs: Hide
 func actionViewLogsHide(g *gocui.Gui, v *gocui.View) error {
 	g.SetViewOnBottom("logs")
+	g.SetViewOnBottom("logs-containers")
 	g.SetCurrentView("pods")
 
 	v.Clear()
