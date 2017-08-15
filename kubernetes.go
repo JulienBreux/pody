@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"strconv"
 	"time"
 
@@ -44,6 +45,25 @@ func deletePod(p string) error {
 	cs := getClientSet()
 
 	return cs.CoreV1().Pods(NAMESPACE).Delete(p, &metav1.DeleteOptions{})
+}
+
+// Get pod logs
+func getPodLogs(p string, out io.Writer) error {
+	cs := getClientSet()
+
+	opts := &v1.PodLogOptions{}
+
+	req := cs.CoreV1().Pods(NAMESPACE).GetLogs(p, opts)
+
+	readCloser, err := req.Stream()
+	if err != nil {
+		return err
+	}
+	defer readCloser.Close()
+
+	_, err = io.Copy(out, readCloser)
+
+	return err
 }
 
 // Column helper: Restarts

@@ -55,3 +55,44 @@ func actionViewPodsDelete(g *gocui.Gui, v *gocui.View) error {
 
 	return err
 }
+
+// Show views logs
+func showViewLogs(g *gocui.Gui, v *gocui.View) error {
+	vn := "logs"
+
+	debug(g, "Action: Show view logs")
+	g.SetViewOnTop(vn)
+	g.SetCurrentView(vn)
+
+	// TODO Enable logs
+	switch LOG_MOD {
+	case "pod":
+		v, err := g.View(vn)
+		if err != nil {
+			return err
+		}
+		getPodLogs(POD, v)
+	}
+
+	return nil
+}
+
+// View pods: Logs
+func actionViewPodsLogs(g *gocui.Gui, v *gocui.View) error {
+	LOG_MOD = "pod"
+	err := showViewLogs(g, v)
+
+	return err
+}
+
+// View logs: Hide
+func actionViewLogsHide(g *gocui.Gui, v *gocui.View) error {
+	g.SetViewOnBottom("logs")
+	g.SetCurrentView("pods")
+
+	v.Clear()
+
+	debug(g, "Action: Hide view logs)")
+
+	return nil
+}

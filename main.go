@@ -10,6 +10,7 @@ import (
 )
 
 var DEBUG_DISPLAYED bool = false
+var LOG_MOD string = "pod"
 var NAMESPACE string = "default"
 var POD string = ""
 
@@ -20,6 +21,8 @@ var keys []Key = []Key{
 	Key{"pods", gocui.KeyArrowUp, actionViewPodsUp},
 	Key{"pods", gocui.KeyArrowDown, actionViewPodsDown},
 	Key{"pods", 'd', actionViewPodsDelete},
+	Key{"pods", 'l', actionViewPodsLogs},
+	Key{"logs", 'l', actionViewLogsHide},
 }
 
 // Main or not main, that's the question^^
@@ -49,6 +52,7 @@ func uiLayout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
 
 	viewDebug(g, maxX, maxY)
+	viewLogs(g, maxX, maxY)
 	viewOverlay(g, maxX, maxY)
 	viewTitle(g, maxX, maxY)
 	viewPods(g, maxX, maxY)
