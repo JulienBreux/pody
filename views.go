@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/jroimartin/gocui"
 	"github.com/willf/pad"
@@ -72,48 +73,79 @@ func viewPods(g *gocui.Gui, lMaxX int, lMaxY int) error {
 		// Set as current view
 		g.SetCurrentView(v.Name())
 
-		// Content: Add column
-		//viewPodsAddLine(v, lMaxX, "NAME", "CPU", "MEMORY", "READY", "STATUS", "RESTARTS", "AGE") // TODO CPU + Memory
-		viewPodsAddLine(v, lMaxX, "NAME", "READY", "STATUS", "RESTARTS", "AGE")
-		fmt.Fprintln(v, strings.Repeat("─", lMaxX))
-
-		// Content: Add lines
-		// TODO Use goroutine
-		pods, err := getPods()
-		if err != nil {
-			panic(err.Error())
-		}
-		if len(pods.Items) > 0 {
-			debug(g, fmt.Sprintf("There are %d pods in the cluster", len(pods.Items)))
-			for _, pod := range pods.Items {
-				n := pod.GetName()
-				//c := "?" // TODO CPU + Memory
-				//m := "?" // TODO CPU + Memory
-				s := columnHelperStatus(pod.Status)
-				r := columnHelperRestarts(pod.Status.ContainerStatuses)
-				a := columnHelperAge(pod.CreationTimestamp)
-				cr := columnHelperReady(pod.Status.ContainerStatuses)
-				viewPodsAddLine(v, lMaxX, n, cr, s, r, a)
-				//viewPodsAddLine(v, lMaxX, n, c, m, cr, s, r, a) // TODO CPU + Memory
-			}
-		} else {
-			debug(g, "Pods not found.")
-		}
+		// Content
+		go viewPodsActualize(g, lMaxX)
+		go viewPodsAutoRefresh(g, lMaxX)
 	}
 
 	return nil
 }
 
+// Auto refresh view pods
+func viewPodsAutoRefresh(g *gocui.Gui, lMaxX int) {
+	c := getConfig()
+	t := time.NewTicker(time.Duration(c.frequency) * time.Second)
+	for {
+		select {
+		case <-t.C:
+			debug(g, fmt.Sprintf("View pods: Refreshing (%ds)", c.frequency))
+			go viewPodsActualize(g, lMaxX)
+		}
+	}
+}
+
+// Actualize pods view
+func viewPodsActualize(g *gocui.Gui, lMaxX int) {
+	g.Execute(func(g *gocui.Gui) error {
+		debug(g, "View pods: Actualize")
+		v, err := g.View("pods")
+		if err != nil {
+			return err
+		}
+
+		pods, err := getPods()
+		if err != nil {
+			panic(err.Error())
+		}
+
+		v.Clear()
+
+		// Content: Add column
+		//viewPodsAddLine(v, lMaxX, "NAME", "CPU", "MEMORY", "READY", "STATUS", "RESTARTS", "AGE") // TODO CPU + Memory #20
+		viewPodsAddLine(v, lMaxX, "NAME", "READY", "STATUS", "RESTARTS", "AGE")
+		fmt.Fprintln(v, strings.Repeat("─", lMaxX))
+
+		if len(pods.Items) > 0 {
+			debug(g, fmt.Sprintf("View pods: %d pods found", len(pods.Items)))
+			for _, pod := range pods.Items {
+				n := pod.GetName()
+				//c := "?" // TODO CPU + Memory #20
+				//m := "?" // TODO CPU + Memory #20
+				s := columnHelperStatus(pod.Status)
+				r := columnHelperRestarts(pod.Status.ContainerStatuses)
+				a := columnHelperAge(pod.CreationTimestamp)
+				cr := columnHelperReady(pod.Status.ContainerStatuses)
+				viewPodsAddLine(v, lMaxX, n, cr, s, r, a)
+				//viewPodsAddLine(v, lMaxX, n, c, m, cr, s, r, a) // TODO CPU + Memory #20
+			}
+		} else {
+			debug(g, "View pods: Pods not found")
+		}
+
+		return nil
+	})
+}
+
 // Add line to view pods
-//func viewPodsAddLine(v *gocui.View, maxX int, name, cpu, memory, ready, status, restarts, age string) { // TODO CPU + Memory
+//func viewPodsAddLine(v *gocui.View, maxX int, name, cpu, memory, ready, status, restarts, age string) { // TODO CPU + Memory #20
 func viewPodsAddLine(v *gocui.View, maxX int, name, ready, status, restarts, age string) {
-	wN := maxX - 34 // 54 // TODO CPU + Memory
+	wN := maxX - 34 // 54 // TODO CPU + Memory #20
 	if wN < 45 {
 		wN = 45
 	}
 	line := pad.Right(name, wN, " ") +
-		//pad.Right(cpu, 10, " ") + // TODO CPU + Memory
-		//pad.Right(memory, 10, " ") + // TODO CPU + Memory
+		//pad.Right(cpu, 10, " ") + // TODO CPU + Memory #20
+		//pad.Right(memory, 10, " ") + // TODO CPU + Memory #20
 		pad.Right(ready, 10, " ") +
 		pad.Right(status, 10, " ") +
 		pad.Right(restarts, 10, " ") +

@@ -8,7 +8,13 @@ import (
 	"github.com/jroimartin/gocui"
 )
 
-var NAMESPACE string = "default"
+var NAMESPACE string = ""
+
+// Configure globale keys
+var keys []Key = []Key{
+	Key{"", gocui.KeyCtrlC, actionGlobalQuit},
+	Key{"", gocui.KeyCtrlD, actionGlobalToggleDebug},
+}
 
 func main() {
 	g, err := gocui.NewGui(gocui.OutputNormal)
@@ -42,6 +48,7 @@ func uiLayout(g *gocui.Gui) error {
 	return nil
 }
 
+// Useful to debug application (display with CTRL+D)
 func debug(g *gocui.Gui, output interface{}) {
 	v, err := g.View("debug")
 	if err == nil {
