@@ -71,14 +71,20 @@ func viewLogs(g *gocui.Gui, lMaxX int, lMaxY int) error {
 	}
 
 	// Containers view
-	if v, err := g.SetView("logs-containers", 2, 2, lMaxX-4, lMaxY-2); err != nil {
+	//w := int(lMaxX / 4)
+	minX := int(lMaxX/5) * 4
+	minY := 2
+	maxX := lMaxX - 4
+	maxY := int(lMaxY / 5)
+	if v, err := g.SetView("logs-containers", minX, minY, maxX, maxY); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
 
 		// Settings
-		v.Frame = false
-		v.BgColor = gocui.ColorRed
+		v.Frame = true
+		v.BgColor = gocui.ColorBlack
+		v.Highlight = true
 	}
 
 	return nil

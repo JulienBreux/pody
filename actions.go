@@ -31,49 +31,31 @@ func actionGlobalToggleDebug(g *gocui.Gui, v *gocui.View) error {
 // View pods: Up
 func actionViewPodsUp(g *gocui.Gui, v *gocui.View) error {
 	moveViewCursorUp(g, v, 2)
-	line, err := getViewLine(g, v)
-	POD = getPodNameFromLine(line)
-	debug(g, " - Select up in pods view: "+POD)
-	return err
+	debug(g, "Select up in pods view")
+	return nil
 }
 
 // View pods: Down
 func actionViewPodsDown(g *gocui.Gui, v *gocui.View) error {
 	moveViewCursorDown(g, v, false)
-	line, err := getViewLine(g, v)
-	POD = getPodNameFromLine(line)
-	debug(g, " - Select down in pods view: "+POD)
-	return err
+	debug(g, "Select down in pods view")
+	return nil
 }
 
 // View pods: Delete
 func actionViewPodsDelete(g *gocui.Gui, v *gocui.View) error {
-	debug(g, "Delete pod: "+POD)
-	err := deletePod(POD)
+	p, err := getSelectedPod(g)
+	if err != nil {
+		return err
+	}
+
+	if err := deletePod(p); err != nil {
+		return err
+	}
+
+	debug(g, "Delete pod: "+p)
 
 	go viewPodsRefreshList(g)
-
-	return err
-}
-
-// Show views logs
-func showViewLogs(g *gocui.Gui, v *gocui.View) error {
-	vn := "logs"
-
-	debug(g, "Action: Show view logs")
-	g.SetViewOnTop(vn)
-	g.SetViewOnTop(vn + "-containers")
-	g.SetCurrentView(vn)
-
-	// TODO Enable logs
-	switch LOG_MOD {
-	case "pod":
-		v, err := g.View(vn)
-		if err != nil {
-			return err
-		}
-		getPodLogs(POD, v)
-	}
 
 	return nil
 }
@@ -81,13 +63,37 @@ func showViewLogs(g *gocui.Gui, v *gocui.View) error {
 // View pods: Logs
 func actionViewPodsLogs(g *gocui.Gui, v *gocui.View) error {
 	LOG_MOD = "pod"
-	err := showViewLogs(g, v)
+	err := showViewPodsLogs(g)
 
 	return err
 }
 
+// View pod logs: Up
+func actionViewPodsLogsUp(g *gocui.Gui, v *gocui.View) error {
+	vLc, err := g.View("logs-containers")
+	if err != nil {
+		return err
+	}
+	moveViewCursorUp(g, vLc, 0)
+	refreshPodsLogs(g)
+	debug(g, "Select up in logs view")
+	return nil
+}
+
+// View pod logs: Down
+func actionViewPodsLogsDown(g *gocui.Gui, v *gocui.View) error {
+	vLc, err := g.View("logs-containers")
+	if err != nil {
+		return err
+	}
+	moveViewCursorDown(g, vLc, false)
+	refreshPodsLogs(g)
+	debug(g, "Select down in logs view")
+	return nil
+}
+
 // View logs: Hide
-func actionViewLogsHide(g *gocui.Gui, v *gocui.View) error {
+func actionViewPodsLogsHide(g *gocui.Gui, v *gocui.View) error {
 	g.SetViewOnBottom("logs")
 	g.SetViewOnBottom("logs-containers")
 	g.SetCurrentView("pods")

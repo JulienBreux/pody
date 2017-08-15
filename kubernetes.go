@@ -40,6 +40,19 @@ func getPods() (*v1.PodList, error) {
 	return cs.CoreV1().Pods(NAMESPACE).List(metav1.ListOptions{})
 }
 
+// Get the pod containers
+func getPodContainers(p string) []string {
+	var pc []string
+	cs := getClientSet()
+
+	pod, _ := cs.CoreV1().Pods(NAMESPACE).Get(p, metav1.GetOptions{})
+	for _, c := range pod.Spec.Containers {
+		pc = append(pc, c.Name)
+	}
+
+	return pc
+}
+
 // Delete pod
 func deletePod(p string) error {
 	cs := getClientSet()
@@ -47,11 +60,15 @@ func deletePod(p string) error {
 	return cs.CoreV1().Pods(NAMESPACE).Delete(p, &metav1.DeleteOptions{})
 }
 
-// Get pod logs
-func getPodLogs(p string, out io.Writer) error {
+// Get pod container logs
+func getPodContainerLogs(p string, c string, o io.Writer) error {
+	tl := int64(50)
 	cs := getClientSet()
 
-	opts := &v1.PodLogOptions{}
+	opts := &v1.PodLogOptions{
+		Container: c,
+		TailLines: &tl,
+	}
 
 	req := cs.CoreV1().Pods(NAMESPACE).GetLogs(p, opts)
 
@@ -59,9 +76,10 @@ func getPodLogs(p string, out io.Writer) error {
 	if err != nil {
 		return err
 	}
-	defer readCloser.Close()
 
-	_, err = io.Copy(out, readCloser)
+	_, err = io.Copy(o, readCloser)
+
+	readCloser.Close()
 
 	return err
 }

@@ -12,7 +12,6 @@ import (
 var DEBUG_DISPLAYED bool = false
 var LOG_MOD string = "pod"
 var NAMESPACE string = "default"
-var POD string = ""
 
 // Configure globale keys
 var keys []Key = []Key{
@@ -22,7 +21,9 @@ var keys []Key = []Key{
 	Key{"pods", gocui.KeyArrowDown, actionViewPodsDown},
 	Key{"pods", 'd', actionViewPodsDelete},
 	Key{"pods", 'l', actionViewPodsLogs},
-	Key{"logs", 'l', actionViewLogsHide},
+	Key{"logs", 'l', actionViewPodsLogsHide},
+	Key{"logs", gocui.KeyArrowUp, actionViewPodsLogsUp},
+	Key{"logs", gocui.KeyArrowDown, actionViewPodsLogsDown},
 }
 
 // Main or not main, that's the question^^
@@ -158,4 +159,83 @@ func getPodNameFromLine(line string) string {
 	}
 
 	return line[0:i]
+}
+
+// Get selected pod
+func getSelectedPod(g *gocui.Gui) (string, error) {
+	v, err := g.View("pods")
+	if err != nil {
+		return "", err
+	}
+	l, err := getViewLine(g, v)
+	if err != nil {
+		return "", err
+	}
+	p := getPodNameFromLine(l)
+
+	return p, nil
+}
+
+// Show views logs
+func showViewPodsLogs(g *gocui.Gui) error {
+	vn := "logs"
+
+	switch LOG_MOD {
+	case "pod":
+		// Get current selected pod
+		p, err := getSelectedPod(g)
+		if err != nil {
+			return err
+		}
+
+		// Display pod containers
+		vLc, err := g.View(vn + "-containers")
+		if err != nil {
+			return err
+		}
+		vLc.Clear()
+		for _, c := range getPodContainers(p) {
+			fmt.Fprintln(vLc, c)
+		}
+		vLc.SetCursor(0, 0)
+
+		// Display logs
+		refreshPodsLogs(g)
+	}
+
+	debug(g, "Action: Show view logs")
+	g.SetViewOnTop(vn)
+	g.SetViewOnTop(vn + "-containers")
+	g.SetCurrentView(vn)
+
+	return nil
+}
+
+// Refresh pods logs
+func refreshPodsLogs(g *gocui.Gui) error {
+	vn := "logs"
+
+	// Get current selected pod
+	p, err := getSelectedPod(g)
+	if err != nil {
+		return err
+	}
+
+	vLc, err := g.View(vn + "-containers")
+	if err != nil {
+		return err
+	}
+
+	c, err := getViewLine(g, vLc)
+	if err != nil {
+		return err
+	}
+
+	vL, err := g.View(vn)
+	if err != nil {
+		return err
+	}
+	getPodContainerLogs(p, c, vL)
+
+	return nil
 }
