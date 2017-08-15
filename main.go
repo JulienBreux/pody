@@ -19,6 +19,7 @@ var keys []Key = []Key{
 	Key{"pods", gocui.KeyEnter, actionViewPodsSelect},
 }
 
+// Main or not main, that's the question^^
 func main() {
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
@@ -40,6 +41,7 @@ func main() {
 	}
 }
 
+// Define the UI layout
 func uiLayout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
 
@@ -51,7 +53,7 @@ func uiLayout(g *gocui.Gui) error {
 	return nil
 }
 
-// Useful to debug application (display with CTRL+D)
+// Useful to debug Pody (display with CTRL+D)
 func debug(g *gocui.Gui, output interface{}) {
 	v, err := g.View("debug")
 	if err == nil {
