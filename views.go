@@ -66,6 +66,7 @@ func viewPods(g *gocui.Gui, lMaxX int, lMaxY int) error {
 
 		// Settings
 		v.Frame = false
+		v.Highlight = true
 		v.SelBgColor = gocui.ColorGreen
 		v.SelFgColor = gocui.ColorBlack
 		v.SetCursor(0, 2)
