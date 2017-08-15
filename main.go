@@ -14,6 +14,9 @@ var NAMESPACE string = ""
 var keys []Key = []Key{
 	Key{"", gocui.KeyCtrlC, actionGlobalQuit},
 	Key{"", gocui.KeyCtrlD, actionGlobalToggleDebug},
+	Key{"pods", gocui.KeyArrowUp, actionViewPodsUp},
+	Key{"pods", gocui.KeyArrowDown, actionViewPodsDown},
+	Key{"pods", gocui.KeyEnter, actionViewPodsSelect},
 }
 
 func main() {

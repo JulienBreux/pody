@@ -27,3 +27,18 @@ func actionGlobalToggleDebug(g *gocui.Gui, v *gocui.View) error {
 
 	return nil
 }
+
+// View pods: Up
+func actionViewPodsUp(g *gocui.Gui, v *gocui.View) error {
+	return nil
+}
+
+// View pods: Down
+func actionViewPodsDown(g *gocui.Gui, v *gocui.View) error {
+	return nil
+}
+
+// View pods: Select
+func actionViewPodsSelect(g *gocui.Gui, v *gocui.View) error {
+	return nil
+}
