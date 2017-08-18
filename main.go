@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"time"
 
@@ -31,6 +32,21 @@ var keys []Key = []Key{
 
 // Main or not main, that's the question^^
 func main() {
+	c := getConfig()
+
+	// Ask version
+	if c.askVersion {
+		fmt.Println(versionFull())
+		os.Exit(0)
+	}
+
+	// Ask Help
+	if c.askHelp {
+		fmt.Println(versionFull())
+		fmt.Println(HELP)
+		os.Exit(0)
+	}
+
 	// Only used to check errors
 	getClientSet()
 

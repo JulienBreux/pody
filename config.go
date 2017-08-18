@@ -11,6 +11,8 @@ type config struct {
 	kubeConfig *string
 	frequency  int
 	setup      bool
+	askVersion bool
+	askHelp    bool
 }
 
 // Check if configuration is initialized
@@ -44,6 +46,10 @@ func getConfig() config {
 
 	// Refreshing frequency
 	flag.IntVar(&c.frequency, "frequency", 3, "refreshing frequency in seconds (default: 5)")
+
+	// CLI Asks
+	flag.BoolVar(&c.askVersion, "version", false, "get Pody version")
+	flag.BoolVar(&c.askHelp, "help", false, "get Pody help")
 
 	flag.Parse()
 

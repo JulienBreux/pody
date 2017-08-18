@@ -6,6 +6,17 @@ import (
 	"github.com/willf/pad"
 )
 
+var HELP = `
+Pody controls the Pods on your Kubernetes cluster.
+Find more information at https://github.com/JulienBreux/pody.
+The following options can be passed to any command:
+
+  --help        for more information about Pody, hmm, here btw!
+  --version     information about the version
+  --frequency   refreshing frequency in seconds (default: 5)
+  --kubeconfig  absolute path to the kubeconfig file
+`
+
 const APP = "Pody"
 const AUTHOR = "@JulienBreux"
 const VERSION = "0.1.0"
