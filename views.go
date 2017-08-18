@@ -57,6 +57,71 @@ func viewDebug(g *gocui.Gui, lMaxX int, lMaxY int) error {
 	return nil
 }
 
+// View: Namespace
+func viewNamespaces(g *gocui.Gui, lMaxX int, lMaxY int) error {
+	w := lMaxX / 2
+	h := lMaxY / 4
+	minX := (lMaxX / 2) - (w / 2)
+	minY := (lMaxY / 2) - (h / 2)
+	maxX := minX + w
+	maxY := minY + h
+
+	// Main view
+	if v, err := g.SetView("namespaces", minX, minY, maxX, maxY); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+
+		// Configure view
+		v.Title = " Namespaces "
+		v.Frame = true
+		v.Highlight = true
+		v.SelBgColor = gocui.ColorGreen
+		v.SelFgColor = gocui.ColorBlack
+
+		// Display list
+		go viewNamespacesRefreshList(g)
+
+	}
+	return nil
+}
+
+// Actualize list in namespaces view
+func viewNamespacesRefreshList(g *gocui.Gui) {
+	g.Execute(func(g *gocui.Gui) error {
+		debug(g, "View namespaces: Actualize")
+		v, err := g.View("namespaces")
+		if err != nil {
+			return err
+		}
+
+		namespaces, err := getNamespaces()
+		if err != nil {
+			displayError(g, err)
+			return nil
+		}
+		hideError(g)
+
+		var ns []string
+
+		v.Clear()
+
+		if len(namespaces.Items) > 0 {
+			debug(g, fmt.Sprintf("View namespaces: %d namespaces found", len(namespaces.Items)))
+			for _, namespace := range namespaces.Items {
+				fmt.Fprintln(v, namespace.GetName())
+				ns = append(ns, namespace.GetName())
+			}
+		} else {
+			debug(g, "View namespaces: Namespaces not found")
+		}
+
+		setViewCursorToLine(g, v, ns, NAMESPACE)
+
+		return nil
+	})
+}
+
 // View: Logs
 func viewLogs(g *gocui.Gui, lMaxX int, lMaxY int) error {
 	if v, err := g.SetView("logs", 2, 2, lMaxX-4, lMaxY-2); err != nil {

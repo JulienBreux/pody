@@ -43,6 +43,13 @@ func getPods() (*v1.PodList, error) {
 	return cs.CoreV1().Pods(NAMESPACE).List(metav1.ListOptions{})
 }
 
+// Get namespaces
+func getNamespaces() (*v1.NamespaceList, error) {
+	cs := getClientSet()
+
+	return cs.CoreV1().Namespaces().List(metav1.ListOptions{})
+}
+
 // Get the pod containers
 func getPodContainers(p string) []string {
 	var pc []string

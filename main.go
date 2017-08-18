@@ -9,14 +9,14 @@ import (
 	"github.com/jroimartin/gocui"
 )
 
-var DEBUG_DISPLAYED bool = false
 var LOG_MOD string = "pod"
 var NAMESPACE string = "default"
 
 // Configure globale keys
 var keys []Key = []Key{
 	Key{"", gocui.KeyCtrlC, actionGlobalQuit},
-	Key{"", gocui.KeyCtrlD, actionGlobalToggleDebug},
+	Key{"", gocui.KeyCtrlD, actionGlobalToggleViewDebug},
+	Key{"", gocui.KeyCtrlN, actionGlobalToggleViewNamespaces},
 	Key{"pods", gocui.KeyArrowUp, actionViewPodsUp},
 	Key{"pods", gocui.KeyArrowDown, actionViewPodsDown},
 	Key{"pods", 'd', actionViewPodsDelete},
@@ -24,6 +24,9 @@ var keys []Key = []Key{
 	Key{"logs", 'l', actionViewPodsLogsHide},
 	Key{"logs", gocui.KeyArrowUp, actionViewPodsLogsUp},
 	Key{"logs", gocui.KeyArrowDown, actionViewPodsLogsDown},
+	Key{"namespaces", gocui.KeyArrowUp, actionViewNamespacesUp},
+	Key{"namespaces", gocui.KeyArrowDown, actionViewNamespacesDown},
+	Key{"namespaces", gocui.KeyEnter, actionViewNamespacesSelect},
 }
 
 // Main or not main, that's the question^^
@@ -57,6 +60,7 @@ func uiLayout(g *gocui.Gui) error {
 
 	viewDebug(g, maxX, maxY)
 	viewLogs(g, maxX, maxY)
+	viewNamespaces(g, maxX, maxY)
 	viewOverlay(g, maxX, maxY)
 	viewTitle(g, maxX, maxY)
 	viewPods(g, maxX, maxY)
@@ -243,6 +247,7 @@ func refreshPodsLogs(g *gocui.Gui) error {
 	return nil
 }
 
+// Display error
 func displayError(g *gocui.Gui, e error) error {
 	lMaxX, lMaxY := g.Size()
 	minX := lMaxX / 6
@@ -274,6 +279,7 @@ func displayError(g *gocui.Gui, e error) error {
 	return nil
 }
 
+// Hide error box
 func hideError(g *gocui.Gui) {
 	g.DeleteView("errors")
 }
