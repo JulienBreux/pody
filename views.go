@@ -59,7 +59,6 @@ func viewDebug(g *gocui.Gui, lMaxX int, lMaxY int) error {
 
 // View: Logs
 func viewLogs(g *gocui.Gui, lMaxX int, lMaxY int) error {
-	// Logs view
 	if v, err := g.SetView("logs", 2, 2, lMaxX-4, lMaxY-2); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
@@ -71,7 +70,6 @@ func viewLogs(g *gocui.Gui, lMaxX int, lMaxY int) error {
 	}
 
 	// Containers view
-	//w := int(lMaxX / 4)
 	minX := int(lMaxX/5) * 4
 	minY := 2
 	maxX := lMaxX - 4
@@ -140,8 +138,10 @@ func viewPodsRefreshList(g *gocui.Gui) {
 
 		pods, err := getPods()
 		if err != nil {
-			panic(err.Error())
+			displayError(g, err)
+			return nil
 		}
+		hideError(g)
 
 		v.Clear()
 

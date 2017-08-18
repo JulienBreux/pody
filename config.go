@@ -29,6 +29,7 @@ func getConfig() config {
 	c := config{}
 
 	// Home directory
+	// FIXME replace by HomeDir() // k8s.io/client-go/kubernetes/util
 	c.homeDir = os.Getenv("USERPROFILE")
 	if h := os.Getenv("HOME"); h != "" {
 		c.homeDir = h

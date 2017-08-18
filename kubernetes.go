@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"os"
 	"strconv"
 	"time"
 
@@ -21,13 +22,15 @@ func getClientSet() *kubernetes.Clientset {
 	// Use the current context in kubeconfig
 	cc, err := clientcmd.BuildConfigFromFlags("", *c.kubeConfig)
 	if err != nil {
-		panic(err.Error())
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
 
 	// Create the client set
 	cs, err := kubernetes.NewForConfig(cc)
 	if err != nil {
-		panic(err.Error())
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
 
 	return cs

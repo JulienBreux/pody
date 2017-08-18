@@ -28,6 +28,9 @@ var keys []Key = []Key{
 
 // Main or not main, that's the question^^
 func main() {
+	// Only used to check errors
+	getClientSet()
+
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
 		log.Panicln(err)
@@ -238,4 +241,39 @@ func refreshPodsLogs(g *gocui.Gui) error {
 	getPodContainerLogs(p, c, vL)
 
 	return nil
+}
+
+func displayError(g *gocui.Gui, e error) error {
+	lMaxX, lMaxY := g.Size()
+	minX := lMaxX / 6
+	minY := lMaxY / 6
+	maxX := 5 * (lMaxX / 6)
+	maxY := 5 * (lMaxY / 6)
+
+	if v, err := g.SetView("errors", minX, minY, maxX, maxY); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+
+		// Settings
+		v.Title = " ERROR "
+		v.Frame = true
+		v.Wrap = true
+		v.Autoscroll = true
+		v.BgColor = gocui.ColorRed
+		v.FgColor = gocui.ColorWhite
+
+		// Content
+		v.Clear()
+		fmt.Fprintln(v, e.Error())
+
+		// Send to forground
+		g.SetCurrentView(v.Name())
+	}
+
+	return nil
+}
+
+func hideError(g *gocui.Gui) {
+	g.DeleteView("errors")
 }
