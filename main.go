@@ -10,6 +10,7 @@ import (
 	"github.com/jroimartin/gocui"
 )
 
+var version = "master"
 var LOG_MOD string = "pod"
 var NAMESPACE string = "default"
 

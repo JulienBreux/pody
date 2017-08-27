@@ -19,16 +19,15 @@ The following options can be passed to any command:
 
 const APP = "Pody"
 const AUTHOR = "@JulienBreux"
-const VERSION = "0.1.0"
 
 // Get full banner of version
 func versionFull() string {
-	return fmt.Sprintf("%s %s - By %s", APP, VERSION, AUTHOR)
+	return fmt.Sprintf("%s %s - By %s", APP, version, AUTHOR)
 }
 
 // Get only banner (used in title bar view)
 func versionBanner() string {
-	return fmt.Sprintf(" %s %s", APP, VERSION)
+	return fmt.Sprintf(" %s %s", APP, version)
 }
 
 // Get only author (used in title bar view)
