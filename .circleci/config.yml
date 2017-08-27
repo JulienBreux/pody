@@ -18,10 +18,8 @@ jobs:
           name: Get deps
           command: go get ./...
 
-      - run:
-          name: Run unit tests
-          command: |
-            go test | tee ${TEST_RESULTS}/go-test.out
+      - test:
+          command: go test | tee ${TEST_RESULTS}/go-test.out
 
       - deploy:
           requires:
