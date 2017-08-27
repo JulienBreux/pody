@@ -26,7 +26,7 @@
 
 ## Stargazers over time		
 
-[![Stargazers over time](https://starcharts.herokuapp.com/JulienBreux/pody.svg)](https://starcharts.herokuapp.com/JulienBreux/pody)	
+[![Stargazers over time](https://starcharts.herokuapp.com/julienbreux/pody.svg)](https://starcharts.herokuapp.com/julienbreux/pody)	
 
 ---
 
