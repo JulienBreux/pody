@@ -25,9 +25,8 @@ jobs:
       - deploy:
           name: Release
           command: |
-            if git log -1 --pretty=%B | grep "^v[0-9]\+\.[0-9]\+\.[0-9]\+$";
+            if [ -n "$CIRCLE_TAG" ]
             then
-              version=$(git log -1 --pretty=%B)
               curl -sL https://git.io/goreleaser | bash
             else
               echo "No release, skipping build"
@@ -39,7 +38,6 @@ jobs:
 
       - store_test_results:
           path: /tmp/test-results
-
 workflows:
   version: 2
   build-n-deploy:
