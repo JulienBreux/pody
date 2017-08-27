@@ -18,16 +18,15 @@ jobs:
           name: Get deps
           command: go get ./...
 
-      - test:
+      - run:
+          name: Test
           command: go test | tee ${TEST_RESULTS}/go-test.out
 
       - deploy:
-          requires:
-            - test
-          filters:
-            tags:
-              only: /v[0-9]+(\.[0-9]+)*/
-          command: curl -sL https://git.io/goreleaser | bash
+        filters:
+          tags:
+            only: /v[0-9]+(\.[0-9]+)*/
+        command: curl -sL https://git.io/goreleaser | bash
 
       - store_artifacts:
           path: /tmp/test-results
