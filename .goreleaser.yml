@@ -7,3 +7,7 @@ builds:
       - linux
     goarch:
       - amd64
+archive:
+  files:
+    - LICENSE
+    - README.md
