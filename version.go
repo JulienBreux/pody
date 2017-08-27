@@ -28,7 +28,7 @@ func versionFull() string {
 
 // Get only banner (used in title bar view)
 func versionBanner() string {
-	return fmt.Sprintf("  %s %s", APP, VERSION)
+	return fmt.Sprintf(" %s %s", APP, VERSION)
 }
 
 // Get only author (used in title bar view)
@@ -38,5 +38,5 @@ func versionAuthor() string {
 
 // Prepare version title (used in title bar view)
 func versionTitle(width int) string {
-	return versionBanner() + pad.Left(versionAuthor(), width-len(versionBanner()), " ")
+	return "⣿" + versionBanner() + pad.Left(versionAuthor(), width-len(versionBanner()), " ")
 }

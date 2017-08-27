@@ -17,7 +17,7 @@ var NAMESPACE string = "default"
 var keys []Key = []Key{
 	Key{"", gocui.KeyCtrlC, actionGlobalQuit},
 	Key{"", gocui.KeyCtrlD, actionGlobalToggleViewDebug},
-	Key{"", gocui.KeyCtrlN, actionGlobalToggleViewNamespaces},
+	Key{"pods", gocui.KeyCtrlN, actionGlobalToggleViewNamespaces},
 	Key{"pods", gocui.KeyArrowUp, actionViewPodsUp},
 	Key{"pods", gocui.KeyArrowDown, actionViewPodsDown},
 	Key{"pods", 'd', actionViewPodsDelete},
@@ -80,6 +80,7 @@ func uiLayout(g *gocui.Gui) error {
 	viewOverlay(g, maxX, maxY)
 	viewTitle(g, maxX, maxY)
 	viewPods(g, maxX, maxY)
+	viewStatusBar(g, maxX, maxY)
 
 	return nil
 }
@@ -298,4 +299,14 @@ func displayError(g *gocui.Gui, e error) error {
 // Hide error box
 func hideError(g *gocui.Gui) {
 	g.DeleteView("errors")
+}
+
+// StringFormatBoth fg and bg colors
+// Thanks https://github.com/mephux/komanda-cli/blob/master/komanda/color/color.go
+func stringFormatBoth(fg, bg int, str string, args []string) string {
+	return fmt.Sprintf("\x1b[48;5;%dm\x1b[38;5;%d;%sm%s\x1b[0m", bg, fg, strings.Join(args, ";"), str)
+}
+
+func frameText(text string) string {
+	return stringFormatBoth(15, 0, text, []string{"1"})
 }

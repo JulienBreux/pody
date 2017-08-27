@@ -258,3 +258,62 @@ func viewPodsAddLine(v *gocui.View, maxX int, name, ready, status, restarts, age
 		pad.Right(age, 4, " ")
 	fmt.Fprintln(v, line)
 }
+
+// View: Status bar
+func viewStatusBar(g *gocui.Gui, lMaxX int, lMaxY int) error {
+	//-1, -1, lMaxX, 1
+	if v, err := g.SetView("status", -1, lMaxY-2, lMaxX, lMaxY); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+
+		// Settings
+		v.Frame = false
+		v.BgColor = gocui.ColorBlack
+		v.FgColor = gocui.ColorWhite
+
+		// Content
+		changeStatusContext(g, "D")
+	}
+
+	return nil
+}
+
+// Change status context
+func changeStatusContext(g *gocui.Gui, c string) error {
+	lMaxX, _ := g.Size()
+	v, err := g.View("status")
+	if err != nil {
+		return err
+	}
+
+	v.Clear()
+
+	i := lMaxX + 4
+	b := ""
+
+	switch c {
+	case "D":
+		i = 150 + i
+		b = b + frameText("↑") + " Up   "
+		b = b + frameText("↓") + " Down   "
+		b = b + frameText("D") + " Delete   "
+		b = b + frameText("L") + " Show Logs   "
+		b = b + frameText("CTRL+N") + " Namespace   "
+	case "SE":
+		i = i + 100
+		b = b + frameText("↑") + " Up   "
+		b = b + frameText("↓") + " Down   "
+		b = b + frameText("Enter") + " Select   "
+	case "SL":
+		i = i + 100
+		b = b + frameText("↑") + " Up   "
+		b = b + frameText("↓") + " Down   "
+		b = b + frameText("L") + " Hide Logs   "
+	}
+	b = b + frameText("CTRL+C") + " Exit"
+
+	fmt.Fprintln(v, pad.Left(b, i, " "))
+
+	return nil
+}

@@ -39,10 +39,12 @@ func actionGlobalToggleViewNamespaces(g *gocui.Gui, v *gocui.View) error {
 		debug(g, "Action: Display namespaces popup")
 		g.SetViewOnTop(vn)
 		g.SetCurrentView(vn)
+		changeStatusContext(g, "SE")
 	} else {
 		debug(g, "Action: Hide namespaces popup")
 		g.SetViewOnBottom(vn)
 		g.SetCurrentView("pods")
+		changeStatusContext(g, "D")
 	}
 
 	NAMESPACES_DISPLAYED = !NAMESPACES_DISPLAYED
@@ -87,6 +89,8 @@ func actionViewPodsLogs(g *gocui.Gui, v *gocui.View) error {
 	LOG_MOD = "pod"
 	err := showViewPodsLogs(g)
 
+	changeStatusContext(g, "SL")
+
 	return err
 }
 
@@ -121,6 +125,8 @@ func actionViewPodsLogsHide(g *gocui.Gui, v *gocui.View) error {
 	g.SetCurrentView("pods")
 
 	v.Clear()
+
+	changeStatusContext(g, "D")
 
 	debug(g, "Action: Hide view logs)")
 
