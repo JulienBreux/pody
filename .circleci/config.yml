@@ -29,8 +29,7 @@ jobs:
           filters:
             tags:
               only: /v[0-9]+(\.[0-9]+)*/
-          command:
-            - curl -sL https://git.io/goreleaser | bash
+          command: curl -sL https://git.io/goreleaser | bash
 
       - store_artifacts:
           path: /tmp/test-results
