@@ -88,7 +88,7 @@ func viewNamespaces(g *gocui.Gui, lMaxX int, lMaxY int) error {
 
 // Actualize list in namespaces view
 func viewNamespacesRefreshList(g *gocui.Gui) {
-	g.Execute(func(g *gocui.Gui) error {
+	g.Update(func(g *gocui.Gui) error {
 		debug(g, "View namespaces: Actualize")
 		v, err := g.View("namespaces")
 		if err != nil {
@@ -193,7 +193,7 @@ func viewPodsShowWithAutoRefresh(g *gocui.Gui) {
 
 // Actualize list in pods view
 func viewPodsRefreshList(g *gocui.Gui) {
-	g.Execute(func(g *gocui.Gui) error {
+	g.Update(func(g *gocui.Gui) error {
 		lMaxX, _ := g.Size()
 		debug(g, "View pods: Actualize")
 		v, err := g.View("pods")
