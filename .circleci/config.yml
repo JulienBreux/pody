@@ -21,7 +21,7 @@ jobs:
       - run:
           name: Run unit tests
           command: |
-            make test | tee ${TEST_RESULTS}/go-test.out
+            go test | tee ${TEST_RESULTS}/go-test.out
 
       - deploy:
           requires:
