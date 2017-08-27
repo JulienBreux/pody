@@ -25,7 +25,7 @@ jobs:
       - deploy:
           branch: master
           command: |
-            if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
+            if git log -1 --pretty=%B | grep "^v[0-9]\+\.[0-9]\+\.[0-9]\+$";
             then
               version=$(git log -1 --pretty=%B)
               curl -sL https://git.io/goreleaser | bash
