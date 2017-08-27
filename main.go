@@ -301,12 +301,32 @@ func hideError(g *gocui.Gui) {
 	g.DeleteView("errors")
 }
 
-// StringFormatBoth fg and bg colors
-// Thanks https://github.com/mephux/komanda-cli/blob/master/komanda/color/color.go
-func stringFormatBoth(fg, bg int, str string, args []string) string {
-	return fmt.Sprintf("\x1b[48;5;%dm\x1b[38;5;%d;%sm%s\x1b[0m", bg, fg, strings.Join(args, ";"), str)
+// Display confirmation message
+func displayConfirmation(g *gocui.Gui, m string) error {
+	lMaxX, lMaxY := g.Size()
+
+	if v, err := g.SetView("confirmation", -1, lMaxY-3, lMaxX, lMaxY-1); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+
+		// Settings
+		v.Frame = false
+
+		// Content
+		fmt.Fprintln(v, textPadCenter(m, lMaxX))
+
+		// Auto-hide message
+		hide := func() {
+			hideConfirmation(g)
+		}
+		time.AfterFunc(time.Duration(2)*time.Second, hide)
+	}
+
+	return nil
 }
 
-func frameText(text string) string {
-	return stringFormatBoth(15, 0, text, []string{"1"})
+// Hide confirmation message
+func hideConfirmation(g *gocui.Gui) {
+	g.DeleteView("confirmation")
 }

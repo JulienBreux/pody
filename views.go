@@ -261,7 +261,6 @@ func viewPodsAddLine(v *gocui.View, maxX int, name, ready, status, restarts, age
 
 // View: Status bar
 func viewStatusBar(g *gocui.Gui, lMaxX int, lMaxY int) error {
-	//-1, -1, lMaxX, 1
 	if v, err := g.SetView("status", -1, lMaxY-2, lMaxX, lMaxY); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err

@@ -78,6 +78,7 @@ func actionViewPodsDelete(g *gocui.Gui, v *gocui.View) error {
 	}
 
 	debug(g, "Delete pod: "+p)
+	displayConfirmation(g, p+" pod deleted")
 
 	go viewPodsRefreshList(g)
 
@@ -154,5 +155,6 @@ func actionViewNamespacesSelect(g *gocui.Gui, v *gocui.View) error {
 	NAMESPACE = line
 	go viewPodsRefreshList(g)
 	actionGlobalToggleViewNamespaces(g, v)
+	displayConfirmation(g, line+" namespace selected")
 	return err
 }
