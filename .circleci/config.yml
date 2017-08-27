@@ -23,10 +23,15 @@ jobs:
           command: go test | tee ${TEST_RESULTS}/go-test.out
 
       - deploy:
-          filters:
-            tags:
-              only: /v[0-9]+(\.[0-9]+)*/
-          command: curl -sL https://git.io/goreleaser | bash
+          branch: master
+          command: |
+            if git log -1 --pretty=%B | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$";
+            then
+              version=$(git log -1 --pretty=%B)
+              curl -sL https://git.io/goreleaser | bash
+            else
+              echo "No release, skipping build"
+            fi
 
       - store_artifacts:
           path: /tmp/test-results
